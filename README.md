@@ -16,7 +16,8 @@
 4. Quit and restart Neovim
 
 ## Call Function
-Add a binding for `SelectionWindow()` e.g., `vim.keymap.set({ 'n', 'v' }, '<leader>w', ':call SelectionWindow()<CR>') -- llm.nvim`
+Add a binding for `SelectionWindow()` e.g.
+`vim.keymap.set({ 'n', 'v' }, '<leader>w', ':SelectionWindow<CR>') -- llm.nvim`
 
 ## Use
 Highlight the desired text to send to GPT-3 as a prompt and call
