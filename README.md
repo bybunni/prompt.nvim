@@ -17,10 +17,12 @@
 
 ## Call Function
 Add a binding for `SelectionWindow()` e.g.
+
 `vim.keymap.set({ 'n', 'v' }, '<leader>w', ':SelectionWindow<CR>') -- llm.nvim`
 
 ## Use
-Highlight the desired text to send to GPT-3 as a prompt and call
-`SelectionWindow()`. After a few seconds a window will open on the right with
-the response.
+Highlight the desired text to send to GPT-3 as a prompt and invoke the
+`SelectionWindow` command. After a few seconds a window will open with a scratch
+buffer containing the response on the right. You can interact with this window
+like any other neovim window.
 ![Screenshot](images/window.jpg)
