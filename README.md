@@ -16,7 +16,7 @@
 4. Quit and restart Neovim
 
 ## Call Function
-Add a binding for `SelectionWindow()` e.g.
+Add a binding for the `SelectionWindow` command e.g.
 
 `vim.keymap.set({ 'n', 'v' }, '<leader>w', ':SelectionWindow<CR>') -- llm.nvim`
 
