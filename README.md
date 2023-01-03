@@ -23,3 +23,4 @@ Add a binding for `SelectionWindow()` e.g.
 Highlight the desired text to send to GPT-3 as a prompt and call
 `SelectionWindow()`. After a few seconds a window will open on the right with
 the response.
+![Screenshot](images/window.jpg)
