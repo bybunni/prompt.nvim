@@ -10,7 +10,8 @@ class GPT:
     def __init__(self, nvim):
         self.nvim = nvim
 
-    @pynvim.function("SelectionWindow")
+    # @pynvim.function("SelectionWindow")
+    @pynvim.command("SelectionWindow", range=True)
     def selection_window(self, args):
         csrow, cscol, cerow, cecol = self.selection(args)
         scratch_buffer = self.nvim.api.create_buf(True, False)
@@ -24,8 +25,9 @@ class GPT:
             max_tokens=100,
             echo=True,
         )
-        for line in response.choices[0].text.splitlines():
-            scratch_buffer.append(line)
+        # for line in response.choices[0].text.splitlines():
+        #     scratch_buffer.append(line)
+        scratch_buffer.append(response.choices[0].text.splitlines())
         # prompt = "\n\nPrompt sent to GPT3:\n" + prompt
         # for line in prompt.splitlines():
         #     scratch_buffer.append(line)
