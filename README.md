@@ -2,7 +2,7 @@
 
 ## Dependencies
 1. Install [pynvim](https://github.com/neovim/pynvim): `python -m pip install pynvim`
-2. Install [openai](https://github.com/openai/openai-python): `python -m pip install pynvim`
+2. Install [openai](https://github.com/openai/openai-python): `python -m pip install openai`
 ### Verify pynvim is detected
 `:checkhealth` and verify Python 3 provider shows Python and pynvim
 
