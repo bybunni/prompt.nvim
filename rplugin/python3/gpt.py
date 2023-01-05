@@ -10,35 +10,31 @@ class GPT:
     def __init__(self, nvim):
         self.nvim = nvim
 
-    # @pynvim.function("SelectionWindow")
     @pynvim.command("SelectionWindow", range=True)
     def selection_window(self, args):
+        # create split window for response
+        self.nvim.command("vsplit")
+        current_window = self.nvim.current.window
+
         csrow, cscol, cerow, cecol = self.selection(args)
-        scratch_buffer = self.nvim.api.create_buf(True, False)
         highlighted_text = self.nvim.current.buffer[csrow : cerow + 1]
-        # prompt = "Write a pragraph based on the below outline:\n\n"
         prompt = "\n".join(highlighted_text)
-        # prompt += text
+
         response = openai.Completion.create(
             model="text-davinci-003",
             prompt=prompt,
             max_tokens=100,
             echo=True,
         )
-        # for line in response.choices[0].text.splitlines():
-        #     scratch_buffer.append(line)
-        scratch_buffer.append(response.choices[0].text.splitlines())
-        # prompt = "\n\nPrompt sent to GPT3:\n" + prompt
-        # for line in prompt.splitlines():
-        #     scratch_buffer.append(line)
-        window = self.nvim.api.open_win(
-            scratch_buffer,
-            False,
-            {"relative": "win", "row": 0, "col": 95, "width": 88, "height": 20},
-        )
+
+        # create new buffer for response
+        response_buffer = self.nvim.api.create_buf(False, True)
+        response_buffer[:] = response.choices[0].text.splitlines()
+
+        self.nvim.api.win_set_buf(current_window, response_buffer)
 
     @pynvim.function("Selection")
-    def print_selection(self, args):
+    def print_selction(self, args):
         self.nvim.out_write(str(self.selection(args)) + "\n")
 
     def selection(self, args):
