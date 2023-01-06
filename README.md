@@ -15,14 +15,22 @@
 3. Run `:UpdateRemotePlugins`
 4. Quit and restart Neovim
 
-## Call Function
-Add a binding for the `SelectionWindow` command e.g.
-
-`vim.keymap.set({ 'n', 'v' }, '<leader>w', ':SelectionWindow<CR>') -- llm.nvim`
-
 ## Use
-Highlight the desired text to send to GPT-3 as a prompt and invoke the
-`SelectionWindow` command. After a few seconds a window will open with a scratch
-buffer containing the response on the right. You can interact with this window
-like any other neovim window.
+1. In any mode prompt text completion with `:Prompt` e.g. `:Prompt write a haiku` will
+   result in a response like
+```
+blooming morning dew
+beneath azure summer sky
+sparkling fresh renewal
+```
+2. In Visual mode highlight the desired text to send to GPT-3 as a prompt and
+   invoke the `Prompt` command. After a few seconds a window will open with a
+   scratch buffer containing the response. You can interact with this window
+   like any other neovim window.
 ![Screenshot](images/window.jpg)
+
+## Keymaps
+Add a binding for the `Prompt` command e.g.
+
+`vim.keymap.set({ 'n', 'v' }, '<leader>p', ':Prompt<CR>') -- prompt.nvim`
+

@@ -10,15 +10,23 @@ class GPT:
     def __init__(self, nvim):
         self.nvim = nvim
 
-    @pynvim.command("SelectionWindow", range=True)
-    def selection_window(self, args):
+    @pynvim.command("Prompt", range=True, nargs="*")
+    def prompt(self, *args):
+        self.nvim.out_write(str(len(args)) + str(args) + "\n")
+        if len(args[0]) == 0:
+            csrow, cscol, cerow, cecol = self.selection(args)
+            highlighted_text = self.nvim.current.buffer[csrow : cerow + 1]
+            prompt = "\n".join(highlighted_text)
+        else:
+            prompt = " ".join(args[0])
+
         # create split window for response
         self.nvim.command("vsplit")
         current_window = self.nvim.current.window
-
-        csrow, cscol, cerow, cecol = self.selection(args)
-        highlighted_text = self.nvim.current.buffer[csrow : cerow + 1]
-        prompt = "\n".join(highlighted_text)
+        # create new buffer for response
+        response_buffer = self.nvim.api.create_buf(False, True)
+        response_buffer[:] = ["Waiting for response..."]
+        self.nvim.api.win_set_buf(current_window, response_buffer)
 
         response = openai.Completion.create(
             model="text-davinci-003",
@@ -27,10 +35,7 @@ class GPT:
             echo=True,
         )
 
-        # create new buffer for response
-        response_buffer = self.nvim.api.create_buf(False, True)
         response_buffer[:] = response.choices[0].text.splitlines()
-
         self.nvim.api.win_set_buf(current_window, response_buffer)
 
     @pynvim.function("Selection")
