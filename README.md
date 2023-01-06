@@ -10,7 +10,7 @@
 `export OPENAI_API_KEY=YourKey`
 
 ## Install Plugin with Packer
-1. Add to your `init.lua`: `use 'bybunni/llm.nvim'
+1. Add to your `init.lua`: `use 'bybunni/llm.nvim'`
 2. Run `:PackerSync`
 3. Run `:UpdateRemotePlugins`
 4. Quit and restart Neovim
