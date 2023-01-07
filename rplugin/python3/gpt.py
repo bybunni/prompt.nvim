@@ -38,6 +38,22 @@ class GPT:
         response_buffer[:] = response.choices[0].text.splitlines()
         self.nvim.api.win_set_buf(current_window, response_buffer)
 
+    @pynvim.command("PromptChat", range=True)
+    def prompt_chat(self, *args):
+        self.nvim.out_write(str(len(args)) + str(args) + "\n")
+        buffer_text = self.nvim.current.buffer[:]
+        prompt = "\n".join(buffer_text)
+
+        response = openai.Completion.create(
+            model="text-davinci-003",
+            prompt=prompt,
+            max_tokens=300,
+            echo=True,
+        )
+
+        self.nvim.current.buffer[:] = response.choices[0].text.splitlines()
+        self.nvim.command("norm! GVgqG")
+
     @pynvim.function("Selection")
     def print_selction(self, args):
         self.nvim.out_write(str(self.selection(args)) + "\n")
