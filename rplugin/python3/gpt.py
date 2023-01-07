@@ -13,12 +13,28 @@ class GPT:
     @pynvim.command("Prompt", range=True, nargs="*")
     def prompt(self, *args):
         self.nvim.out_write(str(len(args)) + str(args) + "\n")
-        if len(args[0]) == 0:
-            csrow, cscol, cerow, cecol = self.selection(args)
-            highlighted_text = self.nvim.current.buffer[csrow : cerow + 1]
-            prompt = "\n".join(highlighted_text)
+        csrow, cerow = args[1]
+        selected_text = self.nvim.current.buffer[
+            csrow - 1 : (cerow + 1) if cerow != csrow else cerow
+        ]
+        selected_text = "\n".join(selected_text)
+        ssrow, sscol, serow, secol = self.selection(args)
+        # if selection doesn't match cursor position, don't use selected_text
+        # [crow, ccol] == [crow-1, _, ccol-1, _]
+        if (csrow - 1) != ssrow and (cerow - 1) != serow:
+            selected_text = ""
+        # [29, 32] == [29-1, _, 32-1, _]
+        # handle case with no previous selection on new buffer
+        # 2(['no', 'selection', 'start', 'new', 'thing'], [1, 1])
+        # ab[0, 0, 0, 0]
+        # cd[0, 0, 0, 0]
+        # [-1, -1, -1, 0]
+        if len(args[0]) != 0:
+            prompt = " ".join(args[0]) + "\n\n" + selected_text
         else:
-            prompt = " ".join(args[0])
+            prompt = selected_text
+        # self.nvim.out_write(str([csrow, cscol, cerow, cecol]) + "\n")
+        self.nvim.out_write(str([csrow, cerow]) + "\n")
 
         # create split window for response
         self.nvim.command("vsplit")
@@ -52,7 +68,6 @@ class GPT:
         )
 
         self.nvim.current.buffer[:] = response.choices[0].text.splitlines()
-        self.nvim.command("norm! GVgqG")
 
     @pynvim.function("Selection")
     def print_selction(self, args):
@@ -62,8 +77,10 @@ class GPT:
         # 2147483647 is the maximum value for a signed 32-bit integer and will
         # be returned as cecol if we are at the end of the line
         # https://github.com/vim/vim/issues/4464
-        _, csrow, cscol, _ = self.nvim.eval('getpos("\'<")')
-        _, cerow, cecol, _ = self.nvim.eval('getpos("\'>")')
+        a, csrow, cscol, b = self.nvim.eval('getpos("\'<")')
+        c, cerow, cecol, d = self.nvim.eval('getpos("\'>")')
+        self.nvim.out_write("ab" + str([a, csrow, cscol, b]) + "\n")
+        self.nvim.out_write("cd" + str([c, cerow, cecol, d]) + "\n")
         if csrow < cerow or (csrow == cerow and cscol <= cecol):
             return csrow - 1, cscol - 1, cerow - 1, cecol
         else:
