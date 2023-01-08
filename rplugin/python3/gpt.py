@@ -19,16 +19,10 @@ class GPT:
         ]
         selected_text = "\n".join(selected_text)
         ssrow, sscol, serow, secol = self.selection(args)
-        # if selection doesn't match cursor position, don't use selected_text
+        # if cursor position matches visual selection use selected_text
         # [crow, ccol] == [crow-1, _, ccol-1, _]
         if (csrow - 1) != ssrow and (cerow - 1) != serow:
             selected_text = ""
-        # [29, 32] == [29-1, _, 32-1, _]
-        # handle case with no previous selection on new buffer
-        # 2(['no', 'selection', 'start', 'new', 'thing'], [1, 1])
-        # ab[0, 0, 0, 0]
-        # cd[0, 0, 0, 0]
-        # [-1, -1, -1, 0]
         if len(args[0]) != 0:
             prompt = " ".join(args[0]) + "\n\n" + selected_text
         else:
@@ -47,7 +41,7 @@ class GPT:
         response = openai.Completion.create(
             model="text-davinci-003",
             prompt=prompt,
-            max_tokens=100,
+            max_tokens=300,
             echo=True,
         )
 

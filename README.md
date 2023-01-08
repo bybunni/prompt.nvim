@@ -29,6 +29,17 @@ sparkling fresh renewal
    like any other neovim window.
 ![Screenshot](images/window.jpg)
 
+3. Alternatively, in Visual mode highlight the desired text to act on and 
+   invoke the `Prompt` command with arguments, e.g. `:Prompt translate to
+   Spanish` and the prompt command will be combined with the visual text.
+   After a few seconds a window will open with a scratch buffer containing the
+   response. You can interact with this window like any other neovim window.
+![Screenshot](images/prompt_with_visual_selection.jpg)
+
+4. The `PromptChat` command takes as input the entire current buffer and
+   returns responses appended to the end of the current buffer to facilitate an
+   iterative _chat_ style.
+
 ## Keymaps
 Add a binding for the `Prompt` command e.g.
 
