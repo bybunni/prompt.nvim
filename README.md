@@ -1,4 +1,4 @@
-# llm.nvim
+# prompt.nvim
 
 ## Dependencies
 1. Install [pynvim](https://github.com/neovim/pynvim): `python -m pip install pynvim`
@@ -45,3 +45,6 @@ Add a binding for the `Prompt` command e.g.
 
 `vim.keymap.set({ 'n', 'v' }, '<leader>p', ':Prompt<CR>') -- prompt.nvim`
 
+Custom `Prompt` commands to act on a visual selection can also be bound, e.g.
+
+`vim.keymap.set({ 'n', 'v' }, '<leader>pt', ':Prompt translate to Spanish<CR>') -- prompt.nvim`
