@@ -26,15 +26,17 @@ sparkling fresh renewal
 2. In Visual mode highlight the desired text to send to GPT-3 as a prompt and
    invoke the `Prompt` command. After a few seconds a window will open with a
    scratch buffer containing the response. You can interact with this window
-   like any other neovim window.
-![Screenshot](images/window.jpg)
+   like any other neovim window. Additional responses will be prepended to this
+   buffer.
+   ![Screenshot](images/window.jpg)
 
 3. Alternatively, in Visual mode highlight the desired text to act on and 
    invoke the `Prompt` command with arguments, e.g. `:Prompt translate to
    Spanish` and the prompt command will be combined with the visual text.
    After a few seconds a window will open with a scratch buffer containing the
    response. You can interact with this window like any other neovim window.
-![Screenshot](images/prompt_with_visual_selection.jpg)
+   Additional responses will be prepended to this buffer.
+   ![Screenshot](images/prompt_with_visual_selection.jpg)
 
 4. The `PromptChat` command takes as input the entire current buffer and
    returns responses appended to the end of the current buffer to facilitate an

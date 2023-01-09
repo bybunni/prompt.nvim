@@ -9,6 +9,7 @@ openai.api_key = os.environ["OPENAI_API_KEY"]
 class GPT:
     def __init__(self, nvim):
         self.nvim = nvim
+        self.response_buffer = None
 
     @pynvim.command("Prompt", range=True, nargs="*")
     def prompt(self, *args):
@@ -30,14 +31,14 @@ class GPT:
         # self.nvim.out_write(str([csrow, cscol, cerow, cecol]) + "\n")
         self.nvim.out_write(str([csrow, cerow]) + "\n")
 
-        # create split window for response
-        self.nvim.command("vsplit")
-        current_window = self.nvim.current.window
-        # create new buffer for response
-        response_buffer = self.nvim.api.create_buf(False, True)
-        response_buffer[:] = ["Waiting for response..."]
-        self.nvim.api.win_set_buf(current_window, response_buffer)
+        if self.response_buffer is None:
+            # create split window for response
+            self.nvim.command("vsplit")
+            self.response_buffer = self.nvim.api.create_buf(False, True)
+            current_window = self.nvim.current.window
+            self.nvim.api.win_set_buf(current_window, self.response_buffer)
 
+        # self.response_buffer[:] = ["Waiting for response..."]
         response = openai.Completion.create(
             model="text-davinci-003",
             prompt=prompt,
@@ -45,8 +46,10 @@ class GPT:
             echo=True,
         )
 
-        response_buffer[:] = response.choices[0].text.splitlines()
-        self.nvim.api.win_set_buf(current_window, response_buffer)
+        self.response_buffer.append(
+            response.choices[0].text.splitlines() + [""], index=0
+        )
+        # self.nvim.api.win_set_buf(current_window, self.response_buffer)
 
     @pynvim.command("PromptChat", range=True)
     def prompt_chat(self, *args):
